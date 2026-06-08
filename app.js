@@ -21,7 +21,9 @@ const defaultConfig = {
     headline: 'Master Trading, AI Automation & Market Intelligence',
     subheadline: 'Professional trading education, intelligent automation systems, market intelligence, trading bots and advanced learning resources.',
     ctaPrimary: 'Explore Courses',
+    ctaPrimaryUrl: 'courses.html',
     ctaSecondary: 'Trading Dashboard',
+    ctaSecondaryUrl: 'admin.html',
   },
   courses: [
     { title: 'Beginner Trading', description: 'Foundational forex training for disciplined market participation.' },
@@ -39,6 +41,12 @@ const defaultConfig = {
     { title: 'DailyFX', url: 'https://www.dailyfx.com' },
     { title: 'FXStreet', url: 'https://www.fxstreet.com' },
     { title: 'Babypips', url: 'https://www.babypips.com' },
+  ],
+  features: [
+    { title: 'Signal Execution', description: 'Automated order flow for forex, digital assets and multi-asset strategies with risk overlays.' },
+    { title: 'Market Intelligence', description: 'Sentiment, liquidity, volatility and calendar signals delivered through a unified dashboard.' },
+    { title: 'AI Automation', description: 'End-to-end workflow automation, bot orchestration, and lead generation for financial businesses.' },
+    { title: 'Learning & Research', description: 'Structured education across forex, SMC, ICT and systematic trade design for professional traders.' },
   ],
   aiServices: [
     { title: 'WhatsApp Automation', description: 'Signal delivery and client communication through WhatsApp automation.' },
@@ -147,8 +155,15 @@ function renderHome() {
   const secondaryCta = document.querySelector('.hero-actions .button-outline');
   if (headline) headline.textContent = data.homepage.headline;
   if (subheadline) subheadline.textContent = data.homepage.subheadline;
-  if (primaryCta) primaryCta.textContent = data.homepage.ctaPrimary;
-  if (secondaryCta) secondaryCta.textContent = data.homepage.ctaSecondary;
+  if (primaryCta) {
+    primaryCta.textContent = data.homepage.ctaPrimary;
+    if (data.homepage.ctaPrimaryUrl) primaryCta.href = data.homepage.ctaPrimaryUrl;
+  }
+  if (secondaryCta) {
+    secondaryCta.textContent = data.homepage.ctaSecondary;
+    if (data.homepage.ctaSecondaryUrl) secondaryCta.href = data.homepage.ctaSecondaryUrl;
+  }
+  renderHomepageFeatures();
   updateFooterContact();
 }
 
@@ -271,6 +286,40 @@ function showValidationMessage(input, message) {
   setTimeout(() => input.setCustomValidity(''), 3000);
 }
 
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    background: ${type === 'success' ? 'rgba(111, 245, 173, 0.2)' : type === 'error' ? 'rgba(255, 130, 130, 0.2)' : 'rgba(100, 150, 255, 0.2)'};
+    color: ${type === 'success' ? '#6ff5ad' : type === 'error' ? '#ff8282' : '#74a0ff'};
+    border: 1px solid ${type === 'success' ? 'rgba(111, 245, 173, 0.4)' : type === 'error' ? 'rgba(255, 130, 130, 0.4)' : 'rgba(100, 150, 255, 0.4)'};
+    font-weight: 600;
+    z-index: 1000;
+    max-width: 300px;
+    word-wrap: break-word;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+function checkPasswordStrength(password) {
+  let strength = 0;
+  if (password.length >= 8) strength++;
+  if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+  if (password.match(/[0-9]/)) strength++;
+  if (password.match(/[!@#$%^&*]/)) strength++;
+  return strength;
+}
+
+function confirmDelete(itemName = 'item') {
+  return confirm(`Are you sure you want to delete "${itemName}"? This cannot be undone.`);
+}
+
 function handleContactSubmit(event) {
   event.preventDefault();
   const form = event.currentTarget;
@@ -279,7 +328,7 @@ function handleContactSubmit(event) {
     if (invalidEl) showValidationMessage(invalidEl, invalidEl.validationMessage);
     return;
   }
-  alert('Your message has been received. We will reach out shortly.');
+  showToast('✓ Your message has been received. We will reach out shortly.', 'success');
   form.reset();
 }
 
@@ -291,6 +340,11 @@ function handleSignupSubmit(event) {
   const password = document.getElementById('signup-password').value;
   const confirm = document.getElementById('signup-confirm').value;
   if (!name || !email || !phone || !password || !confirm) return;
+  const strength = checkPasswordStrength(password);
+  if (strength < 2) {
+    showValidationMessage(document.getElementById('signup-password'), 'Password must be at least 8 characters with mixed case and numbers.');
+    return;
+  }
   if (password !== confirm) {
     showValidationMessage(document.getElementById('signup-confirm'), 'Passwords must match.');
     return;
@@ -302,8 +356,8 @@ function handleSignupSubmit(event) {
   }
   users.push({ name, email, phone, password, role: 'member' });
   saveUsers(users);
-  alert('Account created successfully. Please login to continue.');
-  window.location.href = 'login.html';
+  showToast('✓ Account created successfully. Redirecting to login...', 'success');
+  setTimeout(() => window.location.href = 'login.html', 1500);
 }
 
 function handleLoginSubmit(event) {
@@ -317,12 +371,11 @@ function handleLoginSubmit(event) {
     return;
   }
   localStorage.setItem(AUTH_KEY, JSON.stringify({ authenticated: true, email: user.email, role: user.role }));
-  alert('Login successful. Redirecting now.');
-  if (user.role === 'admin') {
-    window.location.href = 'admin.html';
-  } else {
-    window.location.href = 'index.html';
-  }
+  showToast('✓ Login successful. Redirecting...', 'success');
+  setTimeout(() => {
+    if (user.role === 'admin') window.location.href = 'admin.html';
+    else window.location.href = 'index.html';
+  }, 1000);
 }
 
 function handleForgotSubmit(event) {
@@ -426,6 +479,20 @@ function getItemsByCategory(data, category) {
   return getContentItems(data).filter((item) => item.category === category);
 }
 
+function renderHomepageFeatures() {
+  const data = getData();
+  const container = document.querySelector('#services .service-grid');
+  if (!container) return;
+  const featureItems = getItemsByCategory(data, 'Feature');
+  if (!featureItems.length) return;
+  container.innerHTML = featureItems.map((item) => `
+      <article class="service-card">
+        <h3>${sanitize(item.title)}</h3>
+        <p>${sanitize(item.description)}</p>
+      </article>
+    `).join('');
+}
+
 function renderAdminList(containerId, items, renderRow) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -445,19 +512,19 @@ function scrollToAdminSection(targetSelector) {
 }
 
 function resetContentToDefaults() {
-  if (!confirm('Reset all content to the default starter data? This cannot be undone.')) return;
+  if (!confirm('Reset ALL content to defaults? This will remove all your changes and cannot be undone.')) return;
   localStorage.removeItem(STORAGE_KEY);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultConfig));
   renderAdminDashboard();
-  alert('Content has been reset to defaults.');
+  showToast('✓ Content reset to defaults.', 'success');
 }
 
 function clearAllContent() {
-  if (!confirm('Clear all managed content from the dashboard?')) return;
+  if (!confirm('Delete ALL managed content? This cannot be undone.')) return;
   const data = getData();
   saveData({ ...data, contentItems: [] });
   renderAdminDashboard();
-  alert('All managed content has been cleared.');
+  showToast('✓ All content cleared.', 'success');
 }
 
 function openContentModal(category = '', itemId = null) {
@@ -554,6 +621,7 @@ function saveContentForm(event) {
   saveData({ ...data, contentItems: updatedItems });
   renderAdminDashboard();
   closeContentModal();
+  showToast(`✓ Content "${title}" saved successfully.`, 'success');
 }
 
 function handleContentActions(event) {
@@ -565,6 +633,7 @@ function handleContentActions(event) {
 
   const data = getData();
   const items = getContentItems(data);
+  const item = items.find(i => i.id === itemId);
 
   if (action === 'edit-content') {
     openContentModal('', itemId);
@@ -572,9 +641,11 @@ function handleContentActions(event) {
   }
 
   if (action === 'delete-content') {
+    if (!confirmDelete(item?.title || 'this item')) return;
     const updatedItems = items.filter((item) => item.id !== itemId);
     saveData({ ...data, contentItems: updatedItems });
     renderAdminDashboard();
+    showToast('✓ Content deleted successfully.', 'success');
     return;
   }
 }
@@ -596,6 +667,14 @@ function renderAdminDashboard() {
     <tr>
       <td>${sanitize(item.title)}</td>
       <td><a href="${sanitize(item.externalLink || item.pdfUrl || '#')}" target="_blank" rel="noopener noreferrer">Link</a></td>
+      <td><button class="button button-soft" data-action="edit-content" data-id="${item.id}">Edit</button> <button class="button button-soft" data-action="delete-content" data-id="${item.id}">Delete</button></td>
+    </tr>
+  `);
+
+  renderAdminList('feature-list', getItemsByCategory(data, 'Feature'), (item) => `
+    <tr>
+      <td>${sanitize(item.title)}</td>
+      <td>${sanitize(item.description)}</td>
       <td><button class="button button-soft" data-action="edit-content" data-id="${item.id}">Edit</button> <button class="button button-soft" data-action="delete-content" data-id="${item.id}">Delete</button></td>
     </tr>
   `);
@@ -717,7 +796,7 @@ function saveHomepageSettings() {
       },
     },
   });
-  alert('Homepage and footer content saved successfully.');
+  showToast('✓ Homepage settings saved successfully.', 'success');
 }
 
 function initAdminPage() {
@@ -729,6 +808,7 @@ function initAdminPage() {
   document.getElementById('cancel-content')?.addEventListener('click', closeContentModal);
   document.getElementById('content-form')?.addEventListener('submit', saveContentForm);
   document.getElementById('add-course-button')?.addEventListener('click', () => openContentModal('Course'));
+  document.getElementById('add-feature-button')?.addEventListener('click', () => openContentModal('Feature'));
   document.getElementById('add-resource-button')?.addEventListener('click', () => openContentModal('Resource Link'));
   document.getElementById('add-ai-service-button')?.addEventListener('click', () => openContentModal('AI Automation Resource'));
   document.getElementById('add-bot-button')?.addEventListener('click', () => openContentModal('Trading Bot'));
@@ -806,7 +886,110 @@ function initCalculators() {
     document.getElementById(buttonId)?.addEventListener('click', callback);
   });
 }
+function initHamburgerMenu() {
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+  if (!hamburger || !navMenu) return;
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    const isExpanded = hamburger.getAttribute('aria-expanded') === 'true';
+    hamburger.setAttribute('aria-expanded', !isExpanded);
+    document.querySelector('.topbar')?.classList.toggle('mobile-nav-open');
+  });
+  navMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.querySelector('.topbar')?.classList.remove('mobile-nav-open');
+  }));
+}
 
+function initThemeToggle() {
+  const toggleBtn = document.getElementById('theme-toggle');
+  if (!toggleBtn) return;
+  const savedTheme = localStorage.getItem('theme-mode') || 'dark';
+  document.body.className = savedTheme === 'light' ? 'light-mode' : '';
+  toggleBtn.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+  toggleBtn.addEventListener('click', () => {
+    const isDark = document.body.classList.contains('light-mode');
+    document.body.classList.toggle('light-mode');
+    localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+    toggleBtn.textContent = isDark ? '☀️' : '🌙';
+  });
+}
+
+function initAdminSearch() {
+  const searchInput = document.getElementById('admin-search-input');
+  const searchBtn = document.getElementById('admin-search-button');
+  if (!searchInput || !searchBtn) return;
+  searchBtn.addEventListener('click', () => performAdminSearch());
+  searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performAdminSearch(); });
+}
+
+function performAdminSearch() {
+  const query = document.getElementById('admin-search-input')?.value.toLowerCase().trim();
+  if (!query) { renderAdminDashboard(); return; }
+  const data = getData();
+  const items = getContentItems(data);
+  const filtered = items.filter(item => item.title.toLowerCase().includes(query) || item.category.toLowerCase().includes(query) || item.description.toLowerCase().includes(query));
+  const contentTable = document.querySelector('#content-item-list');
+  if (contentTable) {
+    contentTable.innerHTML = '';
+    filtered.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${sanitize(item.title)}</td><td>${sanitize(item.category)}</td><td>${item.imageUrl || item.pdfUrl ? '✓' : '-'}</td><td><button type=\"button\" class=\"button button-soft\" data-action=\"edit-content\" data-id=\"${item.id}\">Edit</button> <button type=\"button\" class=\"button button-soft\" data-action=\"delete-content\" data-id=\"${item.id}\">Delete</button></td>`;
+      contentTable.appendChild(row);
+    });
+    document.getElementById('content-item-list').addEventListener('click', handleContentActions);
+    showToast(`Found ${filtered.length} matching items.`, 'info');
+  }
+}
+
+function exportAdminData() {
+  const data = getData();
+  const dataStr = JSON.stringify(data, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `paramcgwala-backup-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  showToast('✓ Data exported successfully. File saved to downloads.', 'success');
+}
+
+function importAdminData() {
+  const fileInput = document.getElementById('import-file-input');
+  if (fileInput) fileInput.click();
+}
+
+function handleFileImport(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const importedData = JSON.parse(e.target?.result || '{}');
+      if (!importedData.site || !importedData.homepage) { showToast('✗ Invalid backup file format.', 'error'); return; }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(importedData));
+      showToast('✓ Data imported successfully. Page refreshing...', 'success');
+      setTimeout(() => window.location.reload(), 1500);
+    } catch (err) {
+      showToast('✗ Failed to import data. File may be corrupted.', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function initExportImport() {
+  const exportBtn = document.getElementById('export-data-button');
+  const importBtn = document.getElementById('import-data-button');
+  const fileInput = document.getElementById('import-file-input');
+  if (exportBtn) exportBtn.addEventListener('click', exportAdminData);
+  if (importBtn) importBtn.addEventListener('click', importAdminData);
+  if (fileInput) fileInput.addEventListener('change', handleFileImport);
+}
 function init() {
   const path = window.location.pathname.split('/').pop();
   if (document.querySelector('.hero')) renderHome();
@@ -817,12 +1000,18 @@ function init() {
   if (path === 'intelligence.html') renderIntelligencePage();
   if (path === 'contact.html') renderContactPage();
 
+  initHamburgerMenu();
+  initThemeToggle();
   updateNavAuthState();
   initAuthForms();
   handlePasswordToggles();
   initCalculators();
 
-  if (path === 'admin.html') initAdminPage();
+  if (path === 'admin.html') {
+    initAdminPage();
+    initAdminSearch();
+    initExportImport();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);

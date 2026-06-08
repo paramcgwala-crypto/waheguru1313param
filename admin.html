@@ -42,6 +42,7 @@
           <h1>Manage platform content and operational assets</h1>
           <p id="admin-welcome" class="dashboard-intro">Welcome to the admin workspace.</p>
         </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode">☀️</button>
       </header>
 
       <section class="dashboard-cards" id="analytics">
@@ -67,6 +68,17 @@
         </article>
       </section>
 
+      <div class="export-backup-section">
+        <button id="export-data-button" type="button" class="button" aria-label="Export all admin data as JSON file">📥 Export Data</button>
+        <button id="import-data-button" type="button" class="button" aria-label="Import previously exported admin data">📤 Import Data</button>
+        <input id="import-file-input" type="file" accept=".json" style="display: none;" />
+      </div>
+
+      <div class="admin-search-box">
+        <input id="admin-search-input" type="text" placeholder="Search content by title or category..." aria-label="Search admin content" />
+        <button id="admin-search-button" type="button" aria-label="Perform search">🔍 Search</button>
+      </div>
+
       <section class="dashboard-block" id="manage-content">
         <div class="section-panel inline-panel">
           <div>
@@ -81,6 +93,7 @@
         </div>
         <div id="admin-category-actions" class="category-actions hidden">
           <button type="button" data-target="#courses">Courses</button>
+          <button type="button" data-target="#features">Features</button>
           <button type="button" data-target="#pdfs">PDFs</button>
           <button type="button" data-target="#news">News</button>
           <button type="button" data-target="#resources">Resources</button>
@@ -140,6 +153,24 @@
               <tr><th>Course</th><th>Description</th><th>Actions</th></tr>
             </thead>
             <tbody id="course-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="features">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Feature Management</p>
+            <h2>Publish homepage feature cards and product highlights</h2>
+          </div>
+          <button id="add-feature-button" type="button" class="button button-primary">New Feature</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Feature</th><th>Description</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="feature-list"></tbody>
           </table>
         </div>
       </section>
