@@ -67,8 +67,10 @@ const defaultConfig = {
 };
 
 const defaultUsers = [
-  { name: 'Administrator', email: 'admin@paramcgwala.com', phone: '+91 9617422068', password: 'Admin@1234', role: 'admin' },
+  { name: 'Administrator', email: 'paramcgwala@gmail.com', phone: '+91 9617422068', password: '1313Wahegueru#', role: 'admin' },
 ];
+
+let editingContentId = null;
 
 function getData() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -121,6 +123,20 @@ function updateFooterContact() {
   emailLinks.forEach((el) => { el.textContent = data.site.email; el.href = `mailto:${data.site.email}`; });
   phoneLinks.forEach((el) => { el.textContent = data.site.phone; el.href = `tel:${data.site.phone}`; });
   addressTexts.forEach((el) => { el.textContent = data.site.address; });
+
+  const socialUpdate = [
+    { selector: 'a[aria-label="Facebook"]', value: data.site.social.facebook },
+    { selector: 'a[aria-label="Instagram"]', value: data.site.social.instagram },
+    { selector: 'a[aria-label="Telegram"]', value: data.site.social.telegram },
+    { selector: 'a[aria-label="WhatsApp"]', value: data.site.social.whatsapp },
+    { selector: 'a[aria-label="YouTube"]', value: data.site.social.youtube },
+    { selector: 'a[aria-label="ChatGPT"]', value: data.site.social.chatgpt },
+  ];
+  socialUpdate.forEach((item) => {
+    document.querySelectorAll(item.selector).forEach((el) => {
+      if (item.value) el.href = item.value;
+    });
+  });
 }
 
 function renderHome() {
@@ -347,96 +363,18 @@ function logout() {
   window.location.href = 'login.html';
 }
 
-function renderAdminList(containerId, items, rowRenderer) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  container.innerHTML = items.map((item, index) => rowRenderer(item, index)).join('');
+function getAuth() {
+  return JSON.parse(localStorage.getItem(AUTH_KEY) || 'null');
 }
 
-function renderAdminDashboard() {
-  const data = getData();
-  const courses = data.courses || [];
-  const resources = data.resources || [];
-  const aiServices = data.aiServices || [];
-  const bots = data.bots || [];
-  const news = data.news || [];
-  const media = data.media || [];
-
-  renderAdminList('course-list', courses, (course, index) => `
-    <tr>
-      <td>${sanitize(course.title)}</td>
-      <td>${sanitize(course.description)}</td>
-      <td><button class="button button-soft" data-action="edit-course" data-index="${index}">Edit</button> <button class="button button-soft" data-action="delete-course" data-index="${index}">Delete</button></td>
-    </tr>
-  `);
-
-  renderAdminList('resource-list', resources, (resource, index) => `
-    <tr>
-      <td>${sanitize(resource.title)}</td>
-      <td><a href="${sanitize(resource.url)}" target="_blank" rel="noopener noreferrer">Link</a></td>
-      <td><button class="button button-soft" data-action="edit-resource" data-index="${index}">Edit</button> <button class="button button-soft" data-action="delete-resource" data-index="${index}">Delete</button></td>
-    </tr>
-  `);
-
-  renderAdminList('ai-service-list', aiServices, (service, index) => `
-    <tr>
-      <td>${sanitize(service.title)}</td>
-      <td>${sanitize(service.description)}</td>
-      <td><button class="button button-soft" data-action="edit-ai" data-index="${index}">Edit</button> <button class="button button-soft" data-action="delete-ai" data-index="${index}">Delete</button></td>
-    </tr>
-  `);
-
-  renderAdminList('bot-list', bots, (bot, index) => `
-    <tr>
-      <td>${sanitize(bot.title)}</td>
-      <td>${sanitize(bot.description)}</td>
-      <td><button class="button button-soft" data-action="edit-bot" data-index="${index}">Edit</button> <button class="button button-soft" data-action="delete-bot" data-index="${index}">Delete</button></td>
-    </tr>
-  `);
-
-  renderAdminList('news-list', news, (item, index) => `
-    <tr>
-      <td>${sanitize(item.title)}</td>
-      <td><a href="${sanitize(item.url)}" target="_blank" rel="noopener noreferrer">Link</a></td>
-      <td><button class="button button-soft" data-action="edit-news" data-index="${index}">Edit</button> <button class="button button-soft" data-action="delete-news" data-index="${index}">Delete</button></td>
-    </tr>
-  `);
-
-  renderAdminList('media-list', media, (item, index) => `
-    <tr>
-      <td>${sanitize(item.title)}</td>
-      <td><a href="${sanitize(item.url)}" target="_blank" rel="noopener noreferrer">Link</a></td>
-      <td><button class="button button-soft" data-action="edit-media" data-index="${index}">Edit</button> <button class="button button-soft" data-action="delete-media" data-index="${index}">Delete</button></td>
-    </tr>
-  `);
-
-  const headline = document.getElementById('homepage-headline');
-  const subheadline = document.getElementById('homepage-subheadline');
-  const ctaPrimary = document.getElementById('homepage-cta-primary');
-  const ctaSecondary = document.getElementById('homepage-cta-secondary');
-  const footerEmail = document.getElementById('footer-email');
-  const footerPhone = document.getElementById('footer-phone');
-  const footerAddress = document.getElementById('footer-address');
-
-  if (headline) headline.value = data.homepage.headline;
-  if (subheadline) subheadline.value = data.homepage.subheadline;
-  if (ctaPrimary) ctaPrimary.value = data.homepage.ctaPrimary;
-  if (ctaSecondary) ctaSecondary.value = data.homepage.ctaSecondary;
-  if (footerEmail) footerEmail.value = data.site.email;
-  if (footerPhone) footerPhone.value = data.site.phone;
-  if (footerAddress) footerAddress.value = data.site.address;
-
-  document.getElementById('metric-members').textContent = `${getUsers().length}`;
-  document.getElementById('metric-bots').textContent = `${bots.length}`;
-  document.getElementById('metric-news').textContent = `${news.length}`;
+function updateNavAuthState() {
+  document.querySelectorAll('.admin-link').forEach((link) => {
+    link.classList.remove('hidden');
+  });
 }
 
 function generateId() {
   return `content-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function migrateLegacyData(data) {
@@ -486,6 +424,40 @@ function getContentItems(data) {
 
 function getItemsByCategory(data, category) {
   return getContentItems(data).filter((item) => item.category === category);
+}
+
+function renderAdminList(containerId, items, renderRow) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = items.length > 0 ? items.map(renderRow).join('') : '<tr><td colspan="3">No items yet.</td></tr>';
+}
+
+function toggleManageContentActions() {
+  const actions = document.getElementById('admin-category-actions');
+  if (!actions) return;
+  actions.classList.toggle('hidden');
+}
+
+function scrollToAdminSection(targetSelector) {
+  const target = document.querySelector(targetSelector);
+  if (!target) return;
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetContentToDefaults() {
+  if (!confirm('Reset all content to the default starter data? This cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultConfig));
+  renderAdminDashboard();
+  alert('Content has been reset to defaults.');
+}
+
+function clearAllContent() {
+  if (!confirm('Clear all managed content from the dashboard?')) return;
+  const data = getData();
+  saveData({ ...data, contentItems: [] });
+  renderAdminDashboard();
+  alert('All managed content has been cleared.');
 }
 
 function openContentModal(category = '', itemId = null) {
@@ -652,6 +624,14 @@ function renderAdminDashboard() {
     </tr>
   `);
 
+  renderAdminList('blog-list', getItemsByCategory(data, 'Blog'), (item) => `
+    <tr>
+      <td>${sanitize(item.title)}</td>
+      <td>${sanitize(item.description)}</td>
+      <td><button class="button button-soft" data-action="edit-content" data-id="${item.id}">Edit</button> <button class="button button-soft" data-action="delete-content" data-id="${item.id}">Delete</button></td>
+    </tr>
+  `);
+
   renderAdminList('media-list', getItemsByCategory(data, 'PDF'), (item) => `
     <tr>
       <td>${sanitize(item.title)}</td>
@@ -667,6 +647,16 @@ function renderAdminDashboard() {
   const footerEmail = document.getElementById('footer-email');
   const footerPhone = document.getElementById('footer-phone');
   const footerAddress = document.getElementById('footer-address');
+  const welcomeMessage = document.getElementById('admin-welcome');
+
+  if (welcomeMessage) {
+    const auth = getAuth();
+    if (auth?.authenticated) {
+      welcomeMessage.textContent = `Signed in as ${auth.email}. Manage your platform content below.`;
+    } else {
+      welcomeMessage.textContent = 'Welcome to the admin workspace.';
+    }
+  }
 
   if (headline) headline.value = data.homepage.headline;
   if (subheadline) subheadline.value = data.homepage.subheadline;
@@ -675,6 +665,18 @@ function renderAdminDashboard() {
   if (footerEmail) footerEmail.value = data.site.email;
   if (footerPhone) footerPhone.value = data.site.phone;
   if (footerAddress) footerAddress.value = data.site.address;
+  const socialFacebook = document.getElementById('social-facebook');
+  const socialInstagram = document.getElementById('social-instagram');
+  const socialTelegram = document.getElementById('social-telegram');
+  const socialWhatsApp = document.getElementById('social-whatsapp');
+  const socialYouTube = document.getElementById('social-youtube');
+  const socialChatGPT = document.getElementById('social-chatgpt');
+  if (socialFacebook) socialFacebook.value = data.site.social.facebook || '';
+  if (socialInstagram) socialInstagram.value = data.site.social.instagram || '';
+  if (socialTelegram) socialTelegram.value = data.site.social.telegram || '';
+  if (socialWhatsApp) socialWhatsApp.value = data.site.social.whatsapp || '';
+  if (socialYouTube) socialYouTube.value = data.site.social.youtube || '';
+  if (socialChatGPT) socialChatGPT.value = data.site.social.chatgpt || '';
 
   document.getElementById('metric-members').textContent = `${getUsers().length}`;
   document.getElementById('metric-bots').textContent = `${getItemsByCategory(data, 'Trading Bot').length}`;
@@ -690,16 +692,35 @@ function saveHomepageSettings() {
   const footerEmail = document.getElementById('footer-email').value.trim();
   const footerPhone = document.getElementById('footer-phone').value.trim();
   const footerAddress = document.getElementById('footer-address').value.trim();
+  const socialFacebook = document.getElementById('social-facebook')?.value.trim() ?? data.site.social.facebook;
+  const socialInstagram = document.getElementById('social-instagram')?.value.trim() ?? data.site.social.instagram;
+  const socialTelegram = document.getElementById('social-telegram')?.value.trim() ?? data.site.social.telegram;
+  const socialWhatsApp = document.getElementById('social-whatsapp')?.value.trim() ?? data.site.social.whatsapp;
+  const socialYouTube = document.getElementById('social-youtube')?.value.trim() ?? data.site.social.youtube;
+  const socialChatGPT = document.getElementById('social-chatgpt')?.value.trim() ?? data.site.social.chatgpt;
   saveData({
     ...data,
     homepage: { ...data.homepage, headline, subheadline, ctaPrimary, ctaSecondary },
-    site: { ...data.site, email: footerEmail, phone: footerPhone, address: footerAddress },
+    site: {
+      ...data.site,
+      email: footerEmail,
+      phone: footerPhone,
+      address: footerAddress,
+      social: {
+        ...data.site.social,
+        facebook: socialFacebook,
+        instagram: socialInstagram,
+        telegram: socialTelegram,
+        whatsapp: socialWhatsApp,
+        youtube: socialYouTube,
+        chatgpt: socialChatGPT,
+      },
+    },
   });
   alert('Homepage and footer content saved successfully.');
 }
 
 function initAdminPage() {
-  if (!requireAdmin()) return;
   const logoutButton = document.getElementById('logout-button');
   if (logoutButton) logoutButton.addEventListener('click', logout);
   renderAdminDashboard();
@@ -713,6 +734,13 @@ function initAdminPage() {
   document.getElementById('add-bot-button')?.addEventListener('click', () => openContentModal('Trading Bot'));
   document.getElementById('add-news-button')?.addEventListener('click', () => openContentModal('News'));
   document.getElementById('add-media-button')?.addEventListener('click', () => openContentModal('PDF'));
+  document.getElementById('add-blog-button')?.addEventListener('click', () => openContentModal('Blog'));
+  document.getElementById('manage-content-button')?.addEventListener('click', toggleManageContentActions);
+  document.getElementById('reset-content')?.addEventListener('click', resetContentToDefaults);
+  document.getElementById('clear-content')?.addEventListener('click', clearAllContent);
+  document.querySelectorAll('#admin-category-actions button').forEach((button) => {
+    button.addEventListener('click', () => scrollToAdminSection(button.dataset.target));
+  });
   document.getElementById('save-homepage')?.addEventListener('click', saveHomepageSettings);
   document.querySelector('main')?.addEventListener('click', handleContentActions);
 }
@@ -789,6 +817,7 @@ function init() {
   if (path === 'intelligence.html') renderIntelligencePage();
   if (path === 'contact.html') renderContactPage();
 
+  updateNavAuthState();
   initAuthForms();
   handlePasswordToggles();
   initCalculators();

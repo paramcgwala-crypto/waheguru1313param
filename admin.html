@@ -40,6 +40,7 @@
         <div>
           <p class="eyebrow">Admin Dashboard</p>
           <h1>Manage platform content and operational assets</h1>
+          <p id="admin-welcome" class="dashboard-intro">Welcome to the admin workspace.</p>
         </div>
       </header>
 
@@ -70,10 +71,25 @@
         <div class="section-panel inline-panel">
           <div>
             <p class="eyebrow">Manage Content</p>
-            <h2>Publish courses, PDFs, articles, news, resources, bots and AI automation assets</h2>
+            <h2>Publish courses, PDFs, blog posts, news, resources, bots and AI automation assets</h2>
             <p class="dashboard-intro">Add content once and it will persist in localStorage and appear on public pages after refresh.</p>
           </div>
-          <button id="open-content-modal" type="button" class="button button-primary">ADD NEW CONTENT</button>
+          <div class="manage-actions">
+            <button id="manage-content-button" type="button" class="button button-primary">MANAGE CONTENT</button>
+            <button id="open-content-modal" type="button" class="button button-soft">ADD NEW CONTENT</button>
+          </div>
+        </div>
+        <div id="admin-category-actions" class="category-actions hidden">
+          <button type="button" data-target="#courses">Courses</button>
+          <button type="button" data-target="#pdfs">PDFs</button>
+          <button type="button" data-target="#news">News</button>
+          <button type="button" data-target="#resources">Resources</button>
+          <button type="button" data-target="#ai-services">AI Automation</button>
+          <button type="button" data-target="#bots">Trading Bots</button>
+          <button type="button" data-target="#blog">Blog</button>
+          <button type="button" data-target="#homepage">Homepage</button>
+          <button type="button" data-target="#contact">Contact</button>
+          <button type="button" data-target="#settings">Settings</button>
         </div>
         <div class="table-card">
           <table>
@@ -200,6 +216,24 @@
         </div>
       </section>
 
+      <section class="dashboard-block" id="blog">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Blog Management</p>
+            <h2>Add, edit and delete blog posts and insight articles</h2>
+          </div>
+          <button id="add-blog-button" type="button" class="button button-soft">New Blog Post</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Title</th><th>Excerpt</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="blog-list"></tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="dashboard-block" id="pdfs">
         <div class="section-panel inline-panel">
           <div>
@@ -215,6 +249,40 @@
             </thead>
             <tbody id="media-list"></tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="contact">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Contact Management</p>
+            <h2>Update external links and social connectivity</h2>
+          </div>
+        </div>
+        <div class="content-grid">
+          <div class="admin-card">
+            <h3>Social & Support Links</h3>
+            <p>Update the footer and contact channels used across the site.</p>
+            <label>Facebook<input id="social-facebook" type="url" placeholder="https://facebook.com/..." /></label>
+            <label>Instagram<input id="social-instagram" type="url" placeholder="https://instagram.com/..." /></label>
+            <label>Telegram<input id="social-telegram" type="url" placeholder="https://telegram.org/..." /></label>
+            <label>WhatsApp<input id="social-whatsapp" type="url" placeholder="https://wa.me/..." /></label>
+            <label>YouTube<input id="social-youtube" type="url" placeholder="https://youtube.com/..." /></label>
+            <label>ChatGPT<input id="social-chatgpt" type="url" placeholder="https://chatgpt.com" /></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="settings">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Settings</p>
+            <h2>Manage the CMS state and platform defaults</h2>
+          </div>
+        </div>
+        <div class="admin-card">
+          <button id="reset-content" type="button" class="button button-soft">Reset Content to Defaults</button>
+          <button id="clear-content" type="button" class="button button-outline">Clear All Content</button>
         </div>
       </section>
     </main>
@@ -240,11 +308,14 @@
               <option value="">Select category</option>
               <option value="Course">Course</option>
               <option value="PDF">PDF</option>
-              <option value="Article">Article</option>
+              <option value="Blog">Blog</option>
               <option value="News">News</option>
               <option value="Resource Link">Resource Link</option>
               <option value="Trading Bot">Trading Bot</option>
               <option value="AI Automation Resource">AI Automation Resource</option>
+              <option value="Image">Image</option>
+              <option value="Video">Video</option>
+              <option value="Download">Download</option>
             </select></label>
         </div>
         <div class="modal-row">
