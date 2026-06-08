@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | ParamCGWalaBots</title>
+  <meta name="description" content="Register for ParamCGWalaBots to access premium trading education, AI automation, market intelligence and bot services." />
+  <meta property="og:title" content="Sign Up | ParamCGWalaBots" />
+  <meta property="og:description" content="Register for ParamCGWalaBots to access premium trading education, AI automation, market intelligence and bot services." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="auth-shell">
+    <header class="auth-header">
+      <a href="index.html" class="brand-inline">ParamCGWalaBots</a>
+      <a class="button button-soft" href="login.html">Already have an account?</a>
+    </header>
+    <main class="auth-panel">
+      <div class="auth-card">
+        <span class="eyebrow">New Member</span>
+        <h1>Create your premium trading account</h1>
+        <p>Register to unlock market intelligence, AI automation, bot setups and premium course access.</p>
+        <form id="signup-form" novalidate>
+          <div class="form-grid">
+            <label>Full Name<input id="signup-name" name="name" type="text" required placeholder="Priya Verma" /></label>
+            <label>Email<input id="signup-email" name="email" type="email" required placeholder="priya@example.com" /></label>
+            <label>Phone Number<input id="signup-phone" name="phone" type="tel" required placeholder="+91 9617422068" /></label>
+          </div>
+          <label>Password
+            <div class="password-input">
+              <input id="signup-password" name="password" type="password" required placeholder="Create a strong password" />
+              <button class="toggle-password" type="button" data-target="signup-password">Show</button>
+            </div>
+          </label>
+          <label>Confirm Password
+            <div class="password-input">
+              <input id="signup-confirm" name="confirm" type="password" required placeholder="Repeat password" />
+              <button class="toggle-password" type="button" data-target="signup-confirm">Show</button>
+            </div>
+          </label>
+          <button type="submit" class="button button-primary">Create Account</button>
+        </form>
+      </div>
+      <div class="auth-info">
+        <h2>Start with a premium learning path</h2>
+        <p>Complete your profile and secure access to the most professional trading education and automation services available.</p>
+        <div class="auth-feature-list">
+          <span>• Course access across forex, SMC, ICT and bots</span>
+          <span>• Industry-grade automation and market intelligence</span>
+          <span>• Priority onboarding, support and analytics</span>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>

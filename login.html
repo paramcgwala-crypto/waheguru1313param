@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | ParamCGWalaBots</title>
+  <meta name="description" content="Login to ParamCGWalaBots to access your trading dashboard, premium courses, automation workflows and market intelligence." />
+  <meta property="og:title" content="Login | ParamCGWalaBots" />
+  <meta property="og:description" content="Login to ParamCGWalaBots to access your trading dashboard, premium courses, automation workflows and market intelligence." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="auth-shell">
+    <header class="auth-header">
+      <a href="index.html" class="brand-inline">ParamCGWalaBots</a>
+      <a class="button button-soft" href="signup.html">Create Account</a>
+    </header>
+    <main class="auth-panel">
+      <div class="auth-card">
+        <span class="eyebrow">Secure Access</span>
+        <h1>Login to your trading workspace</h1>
+        <p>Enter your credentials to access dashboards, course material, automation tools and admin workflows.</p>
+        <form id="login-form" novalidate>
+          <label>Email<input id="login-email" name="email" type="email" required placeholder="you@example.com" /></label>
+          <label>Password
+            <div class="password-input">
+              <input id="login-password" name="password" type="password" required placeholder="Enter your password" />
+              <button class="toggle-password" type="button" data-target="login-password">Show</button>
+            </div>
+          </label>
+          <div class="auth-actions">
+            <a href="forgot-password.html">Forgot password?</a>
+            <button type="submit" class="button button-primary">Login</button>
+          </div>
+        </form>
+      </div>
+      <div class="auth-info">
+        <h2>Premium fintech access</h2>
+        <p>Secure login to manage courses, automation, market intelligence and admin content from one professional platform.</p>
+        <div class="auth-feature-list">
+          <span>• Dedicated admin access for course and resource management</span>
+          <span>• Secure member access to learning and automation tools</span>
+          <span>• Fast access to dashboards, news and trading workflows</span>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>

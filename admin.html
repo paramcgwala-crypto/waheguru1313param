@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | ParamCGWalaBots</title>
+  <meta name="description" content="Admin dashboard for ParamCGWalaBots to manage courses, resources, bots, AI services, news, and homepage content." />
+  <meta property="og:title" content="Admin Dashboard | ParamCGWalaBots" />
+  <meta property="og:description" content="Admin dashboard for ParamCGWalaBots to manage courses, resources, bots, AI services, news, and homepage content." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="dashboard-shell">
+    <aside class="dashboard-sidebar">
+      <div class="brand">
+        <div class="brand-mark">P</div>
+        <div>
+          <strong>ParamCGWalaBots</strong>
+          <span>Admin panel</span>
+        </div>
+      </div>
+      <nav class="dashboard-nav">
+        <a href="index.html">Home</a>
+        <a class="active" href="admin.html">Dashboard</a>
+        <a href="#homepage">Homepage</a>
+        <a href="#courses">Courses</a>
+        <a href="#resources">Resources</a>
+        <a href="#ai-services">AI Services</a>
+        <a href="#bots">Trading Bots</a>
+        <a href="#news">News</a>
+        <a href="#pdfs">PDFs & Media</a>
+        <a href="#footer">Footer</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logout-button" class="button button-soft">Logout</button>
+      </div>
+    </aside>
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div>
+          <p class="eyebrow">Admin Dashboard</p>
+          <h1>Manage platform content and operational assets</h1>
+        </div>
+      </header>
+
+      <section class="dashboard-cards" id="analytics">
+        <article class="metric-card">
+          <span>Total Members</span>
+          <strong id="metric-members">1,280</strong>
+          <p>Active users enrolled in courses and automation services.</p>
+        </article>
+        <article class="metric-card">
+          <span>Monthly Revenue</span>
+          <strong id="metric-revenue">$42,900</strong>
+          <p>Subscription and consulting revenue tracked in the platform.</p>
+        </article>
+        <article class="metric-card">
+          <span>Active Bots</span>
+          <strong id="metric-bots">18</strong>
+          <p>Deployed trading bots executing live strategies across assets.</p>
+        </article>
+        <article class="metric-card">
+          <span>News Alerts</span>
+          <strong id="metric-news">32</strong>
+          <p>Real-time market events and intelligence updates published today.</p>
+        </article>
+      </section>
+
+      <section class="dashboard-block" id="manage-content">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Manage Content</p>
+            <h2>Publish courses, PDFs, articles, news, resources, bots and AI automation assets</h2>
+            <p class="dashboard-intro">Add content once and it will persist in localStorage and appear on public pages after refresh.</p>
+          </div>
+          <button id="open-content-modal" type="button" class="button button-primary">ADD NEW CONTENT</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Title</th><th>Category</th><th>Media</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="content-item-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="homepage">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Homepage Content</p>
+            <h2>Update headline, CTAs and homepage messaging</h2>
+          </div>
+          <button id="save-homepage" type="button" class="button button-primary">Save Homepage</button>
+        </div>
+        <div class="content-grid">
+          <div class="admin-card">
+            <h3>Hero Content</h3>
+            <label>Headline<input id="homepage-headline" type="text" /></label>
+            <label>Subheadline<textarea id="homepage-subheadline" rows="4"></textarea></label>
+            <label>Primary CTA<input id="homepage-cta-primary" type="text" /></label>
+            <label>Secondary CTA<input id="homepage-cta-secondary" type="text" /></label>
+          </div>
+          <div class="admin-card">
+            <h3>Contact Content</h3>
+            <label>Email<input id="footer-email" type="email" /></label>
+            <label>Phone<input id="footer-phone" type="text" /></label>
+            <label>Address<textarea id="footer-address" rows="3"></textarea></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="courses">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Course Management</p>
+            <h2>Add, edit and delete course content</h2>
+          </div>
+          <button id="add-course-button" type="button" class="button button-soft">New Course</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Course</th><th>Description</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="course-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="resources">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Resource Management</p>
+            <h2>Manage links, library items and external tools</h2>
+          </div>
+          <button id="add-resource-button" type="button" class="button button-primary">New Resource</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Resource</th><th>URL</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="resource-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="ai-services">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">AI Services</p>
+            <h2>Manage the automation services in the platform</h2>
+          </div>
+          <button id="add-ai-service-button" type="button" class="button button-soft">New AI Service</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Service</th><th>Description</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="ai-service-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="bots">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">Trading Bots</p>
+            <h2>Manage bot offerings and strategy descriptions</h2>
+          </div>
+          <button id="add-bot-button" type="button" class="button button-primary">New Bot</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Bot</th><th>Strategy</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="bot-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="news">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">News Management</p>
+            <h2>Publish and update market intelligence links</h2>
+          </div>
+          <button id="add-news-button" type="button" class="button button-soft">New News Item</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Headline</th><th>URL</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="news-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="dashboard-block" id="pdfs">
+        <div class="section-panel inline-panel">
+          <div>
+            <p class="eyebrow">PDFs & Media</p>
+            <h2>Add downloadable reports and media assets</h2>
+          </div>
+          <button id="add-media-button" type="button" class="button button-primary">New Media Asset</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Title</th><th>Link</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="media-list"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div id="content-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Content Editor</p>
+          <h2 id="content-modal-title">Add New Content</h2>
+        </div>
+        <button id="close-content-modal" class="button button-soft" type="button">Close</button>
+      </div>
+      <form id="content-form" class="modal-grid">
+        <div class="modal-row full">
+          <label>Title<input id="content-title" type="text" required placeholder="Enter a title" /></label>
+        </div>
+        <div class="modal-row full">
+          <label>Description<textarea id="content-description" rows="4" placeholder="Add a description"></textarea></label>
+        </div>
+        <div class="modal-row">
+          <label>Category<select id="content-category" required>
+              <option value="">Select category</option>
+              <option value="Course">Course</option>
+              <option value="PDF">PDF</option>
+              <option value="Article">Article</option>
+              <option value="News">News</option>
+              <option value="Resource Link">Resource Link</option>
+              <option value="Trading Bot">Trading Bot</option>
+              <option value="AI Automation Resource">AI Automation Resource</option>
+            </select></label>
+        </div>
+        <div class="modal-row">
+          <label>Image URL<input id="content-image" type="url" placeholder="https://example.com/image.jpg" /></label>
+        </div>
+        <div class="modal-row">
+          <label>PDF URL<input id="content-pdf" type="url" placeholder="https://example.com/file.pdf" /></label>
+        </div>
+        <div class="modal-row full">
+          <label>External Link<input id="content-link" type="url" placeholder="https://example.com" /></label>
+        </div>
+        <p class="editor-help full">Use image URL for card visuals, PDF URL for downloads and External Link for content navigation.</p>
+        <div class="modal-footer full">
+          <button id="cancel-content" type="button" class="button button-soft">Cancel</button>
+          <button type="submit" class="button button-primary">Save Content</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="app.js" defer></script>
+</body>
+</html>
